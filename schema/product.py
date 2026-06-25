@@ -1,7 +1,44 @@
-from pydantic import BaseModel,Field,AnyUrl
+from pydantic import BaseModel,Field,AnyUrl,field_validator,model_validator,computed_field,EmailStr
 from typing import Annotated,Literal,Optional,List
 from uuid import UUID
 from datetime import datetime
+
+
+class Seller(BaseModel):
+    id: UUID
+    name: Annotated[
+        str,
+        Field(
+            min_length=2,
+            max_length=60,
+            title="Seller Name",
+            description="Name of the seller (2-60 chars).",
+            examples=["Mi Store", "Apple Store India"],
+        ),
+    ]
+    email: EmailStr
+    website: AnyUrl
+
+    @field_validator("email", mode="after")
+    @classmethod
+    def validate_seller_email_domain(cls, value: EmailStr):
+        allowed_domains = {
+            "mistore.in",
+            "realmeofficial.in",
+            "samsungindia.in",
+            "lenovostore.in",
+            "hpworld.in",
+            "applestoreindia.in",
+            "dellexclusive.in",
+            "sonycenter.in",
+            "oneplusstore.in",
+            "asusexclusive.in",
+        }
+        domain = str(value).split("@")[-1].lower()
+        if domain not in allowed_domains:
+            raise ValueError(f"Seller email domain not allowed: {domain}")
+        return value
+
 
 class Product(BaseModel):
     id: UUID
@@ -69,5 +106,37 @@ class Product(BaseModel):
         List[AnyUrl],
         Field(max_length=1, description="At least 1 image url"),
     ]
-    
+
+    seller:Seller
     created_at:datetime
+
+    @field_validator("sku", mode="after")
+    @classmethod
+    def validate_sku_format(cls, value: str):
+        if "-" not in value:
+            raise ValueError("SKU must have '-'")
+
+        last = value.split("-")[-1]
+        if not (len(last) == 3 and last.isdigit()):
+            raise ValueError("SKU must end with a 3-digit sequence like -234")
+
+        return value
+
+    @model_validator(mode="after")
+    @classmethod
+    def validate_business_rules(cls, model: "Product"):
+        if model.stock == 0 and model.is_active is True:
+            raise ValueError("If stock is 0, is_active must be false")
+
+        if model.discount_percent > 0 and model.rating == 0:
+            raise ValueError("Discounted product must have a rating (rating != 0)")
+
+        return model
+    
+    @computed_field()
+    @property
+    def final_price(self)->float:
+        return round(self.price*(1-self.discount_percent/100),2)
+
+
+
