@@ -39,6 +39,11 @@ class Seller(BaseModel):
             raise ValueError(f"Seller email domain not allowed: {domain}")
         return value
 
+class DimensionCM(BaseModel):
+    length: Annotated[float,Field(gt=0,strict=True,description="length in cm")]
+    width: Annotated[float,Field(gt=0,strict=True,description="width in cm")]
+    height: Annotated[float,Field(gt=0,strict=True,description="height in cm")]
+
 
 class Product(BaseModel):
     id: UUID
@@ -104,9 +109,9 @@ class Product(BaseModel):
     ]
     image_urls: Annotated[
         List[AnyUrl],
-        Field(max_length=1, description="At least 1 image url"),
+        Field(min_length=1, description="At least 1 image url"),
     ]
-
+    dimensions_cm: DimensionCM
     seller:Seller
     created_at:datetime
 
@@ -137,6 +142,12 @@ class Product(BaseModel):
     @property
     def final_price(self)->float:
         return round(self.price*(1-self.discount_percent/100),2)
+    
+    @computed_field
+    @property
+    def calculate_volume(self) -> float:
+        d = self.dimensions_cm
+        return d.length * d.width * d.height
 
 
 

@@ -11,5 +11,18 @@ def load_products() -> List[Dict]:
         return json.load(file)
 
 
+def save_products(products: List[Dict]) -> None:
+    DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(DATA_FILE, "w", encoding="utf-8") as file:
+        json.dump(products, file, indent=2)
+
+
 def get_all_products() -> List[Dict]:
     return load_products()
+
+
+def create_product(product: Dict) -> Dict:
+    products = load_products()
+    products.append(product)
+    save_products(products)
+    return product
