@@ -21,8 +21,12 @@ def get_all_products() -> List[Dict]:
     return load_products()
 
 
-def create_product(product: Dict) -> Dict:
-    products = load_products()
+def add_product(product: Dict) -> Dict:
+    products = get_all_products()
+    if any (p["sku"]== product["sku"] for p in products):
+        raise ValueError("sku already exists")
+    
     products.append(product)
     save_products(products)
     return product
+    

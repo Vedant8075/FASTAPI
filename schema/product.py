@@ -46,7 +46,7 @@ class DimensionCM(BaseModel):
 
 
 class Product(BaseModel):
-    id: UUID
+    id: Optional[UUID] = None
     sku: Annotated[
         str,
         Field(
@@ -112,8 +112,8 @@ class Product(BaseModel):
         Field(min_length=1, description="At least 1 image url"),
     ]
     dimensions_cm: DimensionCM
-    seller:Seller
-    created_at:datetime
+    seller: Seller
+    created_at: Optional[datetime] = None
 
     @field_validator("sku", mode="after")
     @classmethod

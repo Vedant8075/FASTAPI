@@ -3532,5 +3532,39 @@
     "created_at": "2026-06-25T11:08:55.871000Z",
     "final_price": 109.8,
     "calculate_volume": 1.0
+  },
+  {
+    "id": "c471264a-eea6-4600-8f5a-960d67f7d4ad",
+    "sku": "XIAO-359GB-020",
+    "name": "Xiaomi Model Pro",
+    "description": "string",
+    "category": "mobiles",
+    "brand": "Xiaomi",
+    "price": 123.0,
+    "currency": "INR",
+    "discount_percent": 10,
+    "stock": 100,
+    "is_active": true,
+    "rating": 5.0,
+    "tags": [
+      "string"
+    ],
+    "image_urls": [
+      "https://example.com/"
+    ],
+    "dimensions_cm": {
+      "length": 1.0,
+      "width": 1.0,
+      "height": 1.0
+    },
+    "seller": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "Mi Store",
+      "email": "user@mistore.in",
+      "website": "https://example.com/"
+    },
+    "created_at": "2026-06-25T11:32:32.998557Z",
+    "final_price": 110.7,
+    "calculate_volume": 1.0
   }
 ]
