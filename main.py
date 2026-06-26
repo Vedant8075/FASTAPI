@@ -1,13 +1,18 @@
 from fastapi import FastAPI, HTTPException, Query, Path
 from services.products import add_product, get_all_products,delete_product,change_product
 from schema.product import Product,ProductUpdate
+from fastapi.responses import JSONResponse
 from uuid import uuid4,UUID
 from datetime import datetime
 app = FastAPI()
 
 @app.get("/")
 def root():
-    return {"message": "welcome to fastapi"}
+    return JSONResponse(
+        status_code=200,
+        content=
+        {"message": "welcome to fastapi"}
+        )
 
 @app.get("/products")
 def list_products(
