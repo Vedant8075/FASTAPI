@@ -30,3 +30,11 @@ def add_product(product: Dict) -> Dict:
     save_products(products)
     return product
     
+def delete_product(id:str)->None:
+    products=get_all_products()
+    for ind,p in enumerate(products):
+        if p["id"]==str(id):
+            deleted=products.pop(ind)
+            save_products(products)
+            return {"message":"product deleted succesfully",
+                    "data":deleted}

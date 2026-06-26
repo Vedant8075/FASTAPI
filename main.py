@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Query, Path
-from services.products import add_product, get_all_products
+from services.products import add_product, get_all_products,delete_product
 from schema.product import Product
-from uuid import uuid4
+from uuid import uuid4,UUID
 from datetime import datetime
 app = FastAPI()
 
@@ -64,5 +64,14 @@ def create_products(product: Product):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return created
+
+@app.delete("/products/{product_id}")
+def remove_product(product_id:UUID=Path(description="product id")):
+    try:
+        deleted=delete_product(str(product_id))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return deleted
+
 
 
